@@ -9,72 +9,258 @@
 
 ## Desenvolvimeto
 <p align="justify"> O programa foi, inicialmente, desenvolvido seguindo uma arquitetura de 3 camadas. Esse tipo de arquitetura separa classes em 3 diferentes camadas, dependendo da função de cada classe, garantindo melhor coesão e abstração dos códigos. As camadas utilizadas foram chamadas de "domain", "service" e "controler". Em "domain" foram mantidas as classes relacionadas a armazenanmento de dados, as classes de objetos base, com os métodos construtores. Na camada "service", foram mantidas as classes relacionadas à operações do sistema. Por fim, a camada mais ao topo, "controller" mantém os métodos de interação do usuário </p>
-<p align="justify"> O primeiro princípio SOLID, o Princípio da Responsabilidade Única, diz que cada classe deve ter apenas um motivo para mudança. Isso significa dizer que cada classe deve ter apenas uma responsabilidade. A arquitetura de 3 camadas demonstra bem como esse princípio foi aplicado neste projeto. Cada classe, serve apenas uma única função de acordo com a camada em que ela está inserida. Por exemplo, a classe "Alarme" apenas mantém os dados dos alarmes inseridos no sistema, enquanto a classe "AlarmeService" mantém operações como ligar ou desligar um alarme, e a classe "AlarmeController" dá ao usuário a opção de interagir com esses serviços. </p>
-<p align="justify"> O segundo princípio, o Princípio do Aberto-Fechado, diz que classes devem ser abertos para extensão, mas fechados para modificação. Dizer que um código é aberto para extensão significa que conforme o desenvolvimento avança, o código deve estar apto a ser extendido de maneira a receber os novos comportamentos requeridos. No entanto, devemos garantir que o código é fechado para modificação, ou seja, devemos garantir que esses novos comportamentos sendo adicionados não requerem modificação do código previamente escrito, apenas adição de mais código. </p>
-<p align = "justify"> No programa desenvolvido, podemos ver esse princípio, por exemplo, na classe abstrata "InterruptorService". Essa classe implementa os métodos de serviço para objetos do tipo "interruptor". No entanto, temos dois tipos de objetos com interruptores, lâmpadas e ventiladores, cada um desses com um comportamento diferente. A classe abstrata "InterruptorService", então implementa os métodos para interruptores e as classes "LampadaService" e "VentiladorService" herdam dessa classe alterando seus métodos para refletir o comportamento diferente de cada objeto. Dessa maneira, demonstramos como novas funcionalidades podem ser adicionadas sem alterar o código previamente escrito. Da mesma forma que fizemos em "LampadaService" e "VentiladorService", podemos incluir em nosso código novos dispositivos dependentes de interruptores por meio da herança da classe "InterruptorService".</p>
-<p align = "justify"> O princípio da Substituição de Liskov dita que devemos ser capazes de utilizar um objeto de uma classe derivada no lugar de um objeto da classe pai e o código deve funcionar de maneira correta. A classe "InterruptorService" é novamente uma boa maneira de exemplificar esse princípio. </p>
 
-## Aplicação
-No exemplo 1 podemos ver o código para um sistema de biblioteca:
+![Arquitetura de 3 Camadas](https://imgur.com/w2QtG0r.png)
 
+<p align = "justify"> A camada domain contém todas as classes com métodos construtures, getters e setters para cada dispositivo, ou seja "Porta", "Alarme", "Lampada" e "Ventilador". Essa camada contém também a classe "Usuario", que contém os métodos getters e setters para objetos do tipo usuário. Por fim, temos a classe "Sistema" que contém estruturas do tipo ArrayList para cada dispositivo. Cada classe implementa a interface de seu nome, no entanto, todos os dispositivos implementam a interface "Devices". </p>
 
-~~~C++
-struct livro {
-  emprestimo = 0; </br>
-  ...
-} Livro;
+![Camada Domain](https://imgur.com/34K4K7S.png)
 
-public class Biblioteca {
-    public void emprestar_livro(Livro livro){
-          livro.emprestimo = 1; #Livro emprestado
-    }
-    
-    public void devolver_livro(Livro livro){
-          livro.emprestimo = 0; #Livro devolvido
-    }
-    
-    public void imprimir_livros(Livro livro){
-          printf("%s", livro.dados);
-    }
-}
-~~~
+<p align = "justify"> A camada services contém as classes com métodos relacionados à operações do sistema. Essas operações são mudar os estados dos dispositivos e obter e exibir as informações dos mesmo. As classes dessa camada são "AlarmeService", "PortaService", "VentiladorService" e "LampadaService". Há também a classe "InterruptorService" que serve como classe abstrata para as suas classes derivadas "LampadaService" e "VentiladorService". Novamente, cada classe implementa a interface com seu respectivo nome </p>
 
-<p align="center">Exemplo 1</p></br>
-<p align="justify">No código desse sistema temos uma única classe “Biblioteca” com três métodos. O primeiro método, “emprestar_livro”, realiza um empréstimo, alterando os atributos do livro para indicar que ele foi emprestado. No método “devolver_livro” vemos o comportamento oposto, ele altera o valor do atributo “emprestimo” para indicar que o cliente devolveu um livro que havia sido emprestado. O último método, “imprimir_livros”, imprime os dados de um livro.</p>
-<p align="justify">Podemos ver que esse programa não segue o conceito do SRP. Os métodos da classe “Biblioteca” possuem responsabilidades diferentes. Enquanto os dois primeiros métodos são responsáveis pela retirada e manipulação de livros na biblioteca, o último método é responsável por mostrar as informações de um livro.</p>
-<p align="justify">Para manter a coesão de nosso código e diminuir o acoplamento, podemos dividir essa classe em duas novas classes diferentes, cada uma assumindo uma das responsabilidades descritas previamente. Podemos ver isso no exemplo 2.
-</p></br></br>
+![Camada Service](https://imgur.com/gRonuX1.png)
 
-~~~C++
-struct livro {
-  emprestimo = 0;
-  ...
-} Livro;
-
-public class Imprimir {
-    public void imprimir_livros(Livro livro){
-          printf("%s", livro.dados);
-    }
-    
- }
+<p align = "justify"> A última camada é a camada controller. Essa camada é a que recebe interação do usuário. Nela temos a classe "UsuarioController" responsável pelo processo de login e troca de senha. Além disso temos as classes "PortaController", "AlarmeController", "LampadaController" e "VentiladorControler". Essas classes recebem as entradas dadas pelo usuário para definir o estado de cada dispositivo. O programa pode ser então executado através do código da classe "SistemaControle", que contém o método "main".</p>
  
- public class Manuseio_livro {
-    public void devolver_livro(Livro livro){
-          livro.emprestimo = 0; #Livro devolvido
-    }
-    
-    public void emprestar_livro(Livro livro){
-          livro.mprestimo = 1; #Livro emprestado
-    }
- }
-~~~
-<p align="center">Exemplo 2</p></br>
-<p align="justify">Agora temos duas classes. A classe “Imprimir” manteve o método “imprimir_livros”, ela se torna assim unicamente responsável por exibir os dados do livro cadastrado. Já a classe “Manuseio_livro” adotou os métodos “devolver_livro” e “emprestar_livro”, sendo então responsável por realizar a retirada e manuseio dos livros da biblioteca. Dessa forma o código se tornou mais coeso e de fácil manutenção. Ao realizar alteração nos métodos de empréstimo, por exemplo, já não temos mais que nos preocupar em afetar a função de imprimir.</p>
-<p align="justify">É importante notar que os métodos para emprestar e devolver livros são diferentes, porém realizam a mesma função. Assim, ao se aplicar o SRP, ambos os métodos pertencem à mesma classe. Isso deve ser frisado, pois um erro comum é se confundir nas responsabilidades de cada método. Muitas vezes isso leva à implementação errada do conceito, criando códigos com classes que deveriam estar juntas, pois são utilizadas em conjunto, possuem a mesma função ou são altamente coesas. 
-</p>
+ ![Camada Controller](https://imgur.com/37b7Aek.png)
+
+## Princípios SOLID
+<p align="justify"> O primeiro princípio SOLID, o Princípio da Responsabilidade Única, diz que cada classe deve ter apenas um motivo para mudança. Isso significa dizer que cada classe deve ter apenas uma responsabilidade. A arquitetura de 3 camadas demonstra bem como esse princípio foi aplicado neste projeto. Cada classe, serve apenas uma única função de acordo com a camada em que ela está inserida. Por exemplo, a classe "Alarme" apenas mantém os dados dos alarmes inseridos no sistema, enquanto a classe "AlarmeService" mantém operações como ligar ou desligar um alarme, e a classe "AlarmeController" dá ao usuário a opção de interagir com esses serviços. </p>
+
+<p align="justify"> O segundo princípio, o Princípio do Aberto-Fechado, diz que classes devem ser abertos para extensão, mas fechados para modificação. Dizer que um código é aberto para extensão significa que conforme o desenvolvimento avança, o código deve estar apto a ser extendido de maneira a receber os novos comportamentos requeridos. No entanto, devemos garantir que o código é fechado para modificação, ou seja, devemos garantir que esses novos comportamentos sendo adicionados não requerem modificação do código previamente escrito, apenas adição de mais código. </p>
+
+```Java
+ public abstract class InterruptorService implements IInterruptorService { //Classe pai
+	
+	private iSistema sistema;
+
+	@Override
+	public boolean checarInterruptor(String Nome) {
+		Interruptor interruptor = new Interruptor();
+		
+		for (Interruptor i : this.sistema.getInterruptor()) {
+			if (i.getNome().equals(Nome)) {
+				interruptor = i;
+			}
+		}
+		
+		if (interruptor.getEstado() == true) {
+			System.out.printf("O interruptor %s está ligado.\n", interruptor.getNome());
+		}
+		
+		else if (interruptor.getEstado() == false) {
+			System.out.printf("O interruptor %s está desligado.\n", interruptor.getNome());
+		}
+		return interruptor.getEstado();
+	}
+
+	@Override
+	public void altEstado(String Nome) {
+		Interruptor interruptor = new Interruptor();
+		
+		for (Interruptor i : this.sistema.getInterruptor()) {
+			if (i.getNome().equals(Nome)) {
+				interruptor = i;
+			}
+		}
+		if (interruptor.getEstado() == true)
+			interruptor.setEstado(false);
+		else if (interruptor.getEstado() == false) {
+			interruptor.setEstado(true);
+		}
+	}
+}
+
+public class LampadaService extends InterruptorService implements ILampadaService  { //Classe Derivada
+
+	private iSistema sistema;
+	
+	public LampadaService(iSistema sistema) {
+		this.sistema = sistema;
+	}
+
+	@Override
+	public boolean checarInterruptor(String Nome) {
+		Lampada lampada = new Lampada();
+		
+		for (Lampada l : this.sistema.getLampada()) {
+			if (l.getNome().equals(Nome)) {
+				lampada = l;
+			}
+		}
+		if (lampada.getEstado() == true) {
+			System.out.printf("A lampada %s está ligado com uma intensidade de %d.\n", lampada.getNome(), lampada.getIntensidade());
+		}
+		
+		else if (lampada.getEstado() == false) {
+			System.out.printf("A lampada %s está desligado.\n", lampada.getNome());
+		}
+		return lampada.getEstado();
+	}
+
+	@Override
+	public void altEstado(String Nome) {
+		Lampada lampada = new Lampada();
+		
+		for (Lampada i : this.sistema.getLampada()) {
+			if (i.getNome().equals(Nome)) {
+				lampada = i;
+			}
+		}
+		if (lampada.getEstado() == true)
+			lampada.setEstado(false);
+		else if (lampada.getEstado() == false) {
+			lampada.setEstado(true);
+			lampada.setIntensidade(100); //intensidade padrão
+		}
+	}
+
+
+	@Override
+	public List<Lampada> buscarTodas(iSistema sistema) {
+		return sistema.getLampada();
+	}
+	
+	public boolean altIntensidade(iLampada lampada, int intensidade) {
+		lampada.setIntensidade(intensidade);
+		return true;
+	}
+
+}
+```
+<p align = "center"> Exemplo do Princípio Aberto-Fechado </p>
+
+<p align = "justify"> No programa desenvolvido, podemos ver esse princípio, por exemplo, na classe abstrata "InterruptorService". Essa classe implementa os métodos de serviço para objetos do tipo "interruptor". No entanto, temos dois tipos de objetos com interruptores, lâmpadas e ventiladores, cada um desses com um comportamento diferente. A classe abstrata "InterruptorService", então implementa os métodos para interruptores e as classes "LampadaService" e "VentiladorService" herdam dessa classe alterando seus métodos para refletir o comportamento diferente de cada objeto. Dessa maneira, demonstramos como novas funcionalidades podem ser adicionadas sem alterar o código previamente escrito. Da mesma forma que fizemos em "LampadaService" e "VentiladorService", podemos incluir em nosso código novos dispositivos dependentes de interruptores por meio da herança da classe "InterruptorService".</p>
+
+<p align = "justify"> O Princípio da Substituição de Liskov dita que devemos ser capazes de utilizar um objeto de uma classe derivada no lugar de um objeto da classe pai e o código deve funcionar de maneira correta. A classe "InterruptorService" é novamente uma boa maneira de exemplificar esse princípio. O método "checarInterruptor" dessa classe, por exemplo, é sobreescrito nas classes derivadas, e ainda assim, podemos substituir um objeto dessas classes por um da classe base sem comprometer o funcionamento do programa.</p>
+
+```Java
+public abstract class InterruptorService implements IInterruptorService { //Classe Pai
+ public boolean checarInterruptor(String Nome) {
+		Interruptor interruptor = new Interruptor();
+		
+		for (Interruptor i : this.sistema.getInterruptor()) {
+			if (i.getNome().equals(Nome)) {
+				interruptor = i;
+			}
+		}
+		
+		if (interruptor.getEstado() == true) {
+			System.out.printf("O interruptor %s está ligado.\n", interruptor.getNome());
+		}
+		
+		else if (interruptor.getEstado() == false) {
+			System.out.printf("O interruptor %s está desligado.\n", interruptor.getNome());
+		}
+		return interruptor.getEstado();
+	}
+ 
+ public class VentiladorService implements IVentiladorService { //Classe Derivada
+  public boolean checarInterruptor(String Nome) {
+		 Ventilador ventilador = new Ventilador();
+		
+		 for (Ventilador l : this.sistema.getVentilador()) {
+			 if (l.getNome().equals(Nome)) {
+			 	ventilador = l;
+			 }
+	 	}
+		 if (ventilador.getEstado() == true) {
+		 	System.out.printf("A ventilador %s está ligado com uma intensidade de %s.\n", ventilador.getNome(), ventilador.getIntensidade());
+		 }
+		
+		 else if (ventilador.getEstado() == false) {
+		 	System.out.printf("A ventilador %s está desligado.\n", ventilador.getNome());
+		 }
+		 return false;
+	 }
+```
+<p align = "center"> Exemplo do Princípio Substituição de Liskov </p>
+
+<p align = "justify"> O Princípio da Segregação de Interface diz que uma classe não deve ser obrigada a implementar uma interface que ela não utiliza, e que clientes não devem ser obrigados a  se depender de métodos que eles não precisam. Esse princípio garante o desenvolvimeto de interfaces que não são "gordas", ou seja, interfaces que contém muitos métodos, que provavelmente não serão todos utilizados pelas classes que os implementam. Para garantir esse princípio, é necessário atentar-se para desenvolver interfaces apenas com métodos que serão utilizados pelas classes que os implementare. </p>
+
+```Java
+public interface Devices {
+	public void setEstado(boolean Estado);
+	public boolean getEstado();
+	public void setNome(String Nome);
+	public String getNome();
+ //Métodos não utilizados pelas classes que implementam a interface:
+	public void setIntensidade(int intensidade); 
+	public int getIntensidade();
+}
+```
+<p align = "center"> Exemplo de uso errado da Segregação de Interfaces</p>
+
+```Java
+public interface Devices {
+	public void setEstado(boolean Estado);
+	public boolean getEstado();
+	public void setNome(String Nome);
+	public String getNome();
+}
+
+public interface iLampada extends Devices {
+	public void setIntensidade(int intensidade);
+	public int getIntensidade();
+}
+```
+<p align = "center"> Exemplo do uso correto da Segregação de Interfaces</p>
+
+<p align - "justify"> O programa desenvolvido está repleto de interfaces, e nenhuma dessas contém métodos desnecessários às classes que as recebem. No entanto, podemos perceber esse princípio especialmente bem nas interfaces "Devices", "iLampada" e "iVentilador". A interface "Devices" contém métodos que serão utilizados por todos os dispositivos. No entanto, as classes "Lampada" e "Ventilador" representam dois dispositivos que apresentam campos que nenhum outro contém e, por isso, possuem métodos que outros dispositivos não necessitam. Os métodos de "iLampada" e "iVentilador" poderiam ter sido desenvolvidos na interface "Devices", e teríamos apenas uma interface. Isso, porém, deixaria ela "gorda", pois outras classes, como "Porta", não precisam dos métodos que "iLampada" e "iVentilador" contém. </p>
+
+<p align - "justify"> O último princípio SOLID, o Princípio da Inversão de Dependência, diz que módulos de alto nível não devem depender de módulos de baixo nível. Ambos 
+devem depender de abstrações. Além disso, abstrações não devem depender de detalhes. Os detalhes devem depender das abstrações. Módulos de alto nível incluem funções importantes de um programa. Se estes dependem de módulos de baixo nível, mudanças nesses níveis mais baixos poderão mudar completamente o funcionamento de nosso programa, nos forçando a alterar os níveis mais altos da aplicação para corrigir o funcionamento. Ao invés disso, podemos fazer com que ambos os níveis mais altos, quanto os mais baixos dependam de abstrações, invertendo assim o sentido da cascata de dependências. Assim, podemos ajustar detalhes do código sem precisar nos preocuparmos com os efeitos que isso trará em camadas superiores.</p>
+
+```Java
+public class PortaController {
+	
+	private IPortaService service;
+	
+	public PortaController(IPortaService service) {
+		this.service = service;
+	}
+	
+	public boolean altEstado(Devices porta, iUsuario user, UsuarioController uControl) {
+		if (uControl.login(user) == true) {
+			service.altEstado(porta);
+			return true;
+		}
+		return false;
+	}
+	
+	public Porta addPorta() {
+		Porta porta = new Porta();
+		Scanner scan = new Scanner(System.in);
+		String portaName;
+		System.out.println("Escolha o nome da porta a ser adicionada:\n");
+		portaName = scan.nextLine();
+		porta.setNome(portaName);
+		return porta;
+	}
+}
+```
+<p align = "center"> Exemplo do Princípio da Inversão de Dependência.</p>
+
+<p align = "justify"> Na arquitetura de 3 camadas vemos facilmente os módulos do código desenvolvido. A camada "controller" contém os módulos de nível mais alto, já a camada "domain" contém os de nível mais baixo. Neste projeto, o uso de interfaces garante a abstração e, assim, fazemos que os módulos dependam apenas dessas interfaces das camadas mais baixas, ou seja, das abstrações. No módulo "PortaController", vemos que essa classe recebe como atributo um objeto criado a partir da interface "IPortaService". Dessa maneira, garantimos que o código de "PortaController" não fique dependente de códigos da porta de níveis mais baixos, ela é dependende das abstrações dessas.</p>
+
+## Funcionamento
+<p align = "justify"> O programa que foi criado simula o funcionamento de um sistema de controle remoto para casas. Ele pode ser rodado executando o código da classe "SistemaControle". As funções do programa são: Gerenciar o sistema de porta, adicionando novas portas, abrindo ou fechando uma porta e checando se uma porta está aberta ou fechada; Gerenciar o sistemas de alarmes, adicionando novos alarmes, desligando ou ligando um alarme e checando se um alarme está ligado; Gerenciar o sistema de interruptores, este inclui interruptores para lampadas e para ventiladores. Podemos adicionar lampadas e ventiladores, liga-los ou desliga-los, alterar a valocidade do ventilador ou a intensidade da lâmpada (como um dimmer) e checar se estão ligados ou desligados. O programa mantém também dados do usuário, ou seja, o nome de usuário e a senha, necessários para realizar uma ação de segurança. </p> 
+<p align = "justify"> Inicialmente o programa pede a inserção de um nome de usuário e uma senha, estes serão utilizados para alterar o estado de um dispositivo. Os sistemas são então iniciados. Cada controller é construido, e também é construído um objeto da classe "Sistema", da camada "domain". Essa classe guarda em listas todos os dispositivos adicionados no sistema. O sistema já inicia com alguns dispositivos inseridos: uma porta, um alarme, uma lampada e um ventilador.</p>
+
+![Inserção do Usuário](https://imgur.com/fEwAuAA.png)
+
+<p align = "justify"> O usuário recebe então um menu, onde ele pode selecionar com qual dispositivo ele quer interagir. Através desse menu, podemos realizar todas as ações. Além dos dispositivos, podemos alterar a senha do usuário através desse menu. É importante notar que o sistema é sensível à letras maiúsculas e minúsculas. Para finalizar a execução devemos utilizar a opção 0.</p>
+
+![Menu inicial](https://imgur.com/aPYwt0y.png)
+
+<p align = "justify"> Ao selecionar o dispositivo que deseja gerenciar, o programa mostra o menu de opções ao usuário, onde ele pode selecionar se deseja checar o estado do dispositivo, alterar o estado ou adicionar um novo dispositivo do tipo escolhido.</p>
+
+![Menu do Dispositivo](https://imgur.com/N7mTQJN.png)
+
+![Operação Completa](https://imgur.com/F9Z6QhP.png)
 
 ## Conclusão
-<p align="justify">O Princípio da Responsabilidade Única é um importante método para manter um programa enxuto e de fácil manutenção. Apesar de ser um conceito simples, é importante se atentar à coesão para não realizar alterações erradas. Devemos pensar de maneira simples para garantir que não estamos fazendo alterações desnecessárias.
+<p align="justify">O sistema criado, apesar de simples, encapsula e exemplifica bem cada um dos 5 princípios SOLID. A partir desses, foi possível o desenvolvimento de um programa que será fácil de manter e extender. Além disso, a arquitetura de 3 camadas utilizada, também foi responsável pela fácil implementação desses princípios.
 </p>
 </br></br>
 
